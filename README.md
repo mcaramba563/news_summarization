@@ -2,13 +2,9 @@
 
 ## Project overview
 
-This project fine-tunes a sequence-to-sequence model for news summarization in Russian.
-The core idea is to handle very long news articles that exceed the context length of T5 by first
-compressing them into a shorter, information-dense representation using sentence embeddings,
-and only then feeding this compressed input to the summarization model.
+This project fine-tunes a sequence-to-sequence model for news summarization in Russian. The core idea is to handle very long news articles that exceed the context length of T5 by first compressing them into a shorter, information-dense representation using sentence embeddings, and only then feeding this compressed input to the summarization model.
 
-The base summarization model is **T5 / mT5-large**, fine-tuned using **LoRA (PEFT)** to reduce
-memory usage and training cost while preserving model quality.
+The base summarization model is **T5 / mT5-large**, fine-tuned using **LoRA (PEFT)** to reduce memory usage and training cost while preserving model quality.
 
 ---
 
@@ -21,17 +17,13 @@ is applied before training and inference:
    The article is split into sentences using `nltk.sent_tokenize`.
 
 2. **Chunking**  
-   Sentences are grouped into fixed-size chunks (`sent_in_chunk`), depending on the total
-   length of the article (small / medium / large).
+   Sentences are grouped into fixed-size chunks (`sent_in_chunk`), depending on the total length of the article (small / medium / large).
 
 3. **Chunk-level representation**  
-   For each chunk, all its sentences are concatenated and embedded using
-   `ai-forever/sbert_large_mt_nlu_ru` (Sentence-BERT).
+   For each chunk, all its sentences are concatenated and embedded using `ai-forever/sbert_large_mt_nlu_ru` (Sentence-BERT).
 
 4. **Sentence scoring**  
-   Each sentence inside the chunk is embedded individually.  
-   Cosine similarity between the sentence embedding and the chunk embedding is computed,
-   producing a relevance score.
+   Each sentence inside the chunk is embedded individually.  Cosine similarity between the sentence embedding and the chunk embedding is computed, producing a relevance score.
 
 5. **Sentence selection**  
    From each chunk:
@@ -77,9 +69,7 @@ Training and validation loss were logged using TensorBoard.
 - **Train loss ≈ 10**
 - **Validation loss ≈ 2**
 
-The gap between train and validation loss is expected and likely caused by dropout
-and evaluation settings. The loss curves show fast convergence and stable behavior
-after the initial phase.
+The gap between train and validation loss is expected and likely caused by dropout and evaluation settings. The loss curves show fast convergence and stable behavior after the initial phase.
 
 ![alt text](images/Loss.png)
 
@@ -94,7 +84,7 @@ Below are examples comparing the **fine-tuned model** with the **default base mo
 
 **Fine-tuned model**
 
-В ОАЭ высокопоставленная американская и израильская делегация находятся в ОАЭ с двухдневным визитом, за время которого стороны заключили историческое соглашение о нормализации отношений между США, Израилем и ОАЭ.
+В ОАЭ высокопоставленная американская и израильская делегация находятся в ОАЭ с двухдневным визитом, зам время которого стороны заключили историческое соглашение о нормализации отношений между США, Израилем и ОАЭ.
 
 **Default mT5-large**
 
@@ -125,3 +115,14 @@ Below are examples comparing the **fine-tuned model** with the **default base mo
 <extra_id_0> краткое содержание: ... <extra_id_1> краткое содержание: ... Краткое содержание: ... Краткое содержание: ... Краткое содержание: ... <extra_id_2> краткое содержание: ... <extra_id_3> краткое содержание: ... <extra_id_4> краткое содержание: ... <extra_id_5> краткое содержание: ... <extra_id_6>: ... <extra_id_7>: ... <extra_id_8>: ... <extra_id_21>: ... <extra_id_22>: ... <extra_id_23>: ... <extra_id_24>: ... <extra_id_25>. <extra_id_26>.  <extra_id_27>.  <extra_id_28>.  <extra_id_29>.  <extra_id_30>.  <extra_id_31>.  <extra_id_32>.  <extra_id_33>.  <extra_id_34>.  <extra_id_35>.  <extra_id_36>.  <extra_id_37>. 
 
 ---
+
+## Licenses
+
+This project uses the following pretrained models:
+1. Sentence-BERT model "sbert_large_mt_nlu_ru" developed by AI Forever
+   and distributed via Hugging Face. The model is released under the
+   Apache License 2.0.
+
+2. The T5 (mT5-large) sequence-to-sequence model developed by Google
+   and distributed via Hugging Face. The model is released under the
+   Apache License 2.0.
